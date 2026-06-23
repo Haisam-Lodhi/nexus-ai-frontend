@@ -627,21 +627,21 @@ function App() {
                 >
                   {/* Animated Logo */}
                   <motion.div
-                    className="mb-5 animate-float"
+                    className="mb-3 md:mb-5 animate-float"
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.2, duration: 0.5 }}
                   >
                     <div className="relative">
                       <div className="absolute inset-0 rounded-3xl animate-pulse-glow" style={{ background: 'rgba(138,180,248,0.1)', filter: 'blur(20px)' }} />
-                      <div className="relative w-16 h-16 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(138,180,248,0.08)', border: '1px solid rgba(138,180,248,0.15)' }}>
-                        <NexusLogo size={40} />
+                      <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(138,180,248,0.08)', border: '1px solid rgba(138,180,248,0.15)' }}>
+                        <NexusLogo size={window.innerWidth < 640 ? 28 : 40} />
                       </div>
                     </div>
                   </motion.div>
 
                   <motion.h1
-                    className="text-3xl md:text-5xl font-extrabold mb-3 tracking-tight welcome-title"
+                    className="text-2xl sm:text-3xl md:text-5xl font-extrabold mb-2 md:mb-3 tracking-tight welcome-title"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
@@ -651,7 +651,7 @@ function App() {
                   </motion.h1>
 
                   <motion.p
-                    className="text-sm md:text-base max-w-md leading-relaxed"
+                    className="text-xs sm:text-sm md:text-base max-w-md leading-relaxed px-4 md:px-0"
                     style={{ color: 'var(--text-muted)' }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -869,7 +869,7 @@ function App() {
               {/* Starter Cards — above input on welcome screen */}
               {chatHistory.length === 0 && (
                 <motion.div
-                  className="grid grid-cols-2 md:grid-cols-4 gap-2.5 w-full mb-3"
+                  className="grid grid-cols-2 gap-2 sm:gap-2.5 w-full mb-3"
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
