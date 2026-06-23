@@ -695,3 +695,156 @@ body {
   border: 2px solid rgba(26, 115, 232, 0.2);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
+
+/* ============================================
+   📱 MOBILE RESPONSIVE — All Breakpoints
+   ============================================ */
+
+/* ---- Tablet & Below (< 768px) ---- */
+@media (max-width: 767px) {
+
+  /* Sidebar: Full overlay on mobile */
+  .mobile-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 19;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .glass.mobile-sidebar {
+    position: fixed !important;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 25;
+    width: 280px !important;
+    max-width: 85vw;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Message action buttons: Show inside bubble on mobile */
+  .mobile-msg-actions {
+    display: flex !important;
+    position: static !important;
+    opacity: 1 !important;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-subtle);
+    flex-direction: row !important;
+    gap: 4px !important;
+  }
+
+  /* Hide desktop hover actions on mobile */
+  .desktop-msg-actions {
+    display: none !important;
+  }
+
+  /* Preview Modal: Full-screen on mobile */
+  .preview-modal {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+    margin: 0;
+  }
+
+  /* Header: Compact on mobile */
+  .mobile-hide {
+    display: none !important;
+  }
+
+  /* Welcome text smaller */
+  .welcome-title {
+    font-size: 1.75rem !important;
+  }
+
+  /* Starter cards: 2 columns always on mobile */
+  .starter-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Input bar: Tighter padding */
+  .glass-input .input-actions-left {
+    gap: 0 !important;
+  }
+
+  .glass-input .input-actions-left label {
+    padding: 6px !important;
+  }
+
+  /* Code blocks: Prevent horizontal overflow */
+  .prose-dark pre {
+    max-width: calc(100vw - 100px);
+    overflow-x: auto;
+  }
+}
+
+/* ---- Small phones (< 480px) ---- */
+@media (max-width: 479px) {
+
+  .welcome-title {
+    font-size: 1.5rem !important;
+  }
+
+  .starter-card {
+    padding: 0.6rem !important;
+  }
+
+  .starter-card p {
+    font-size: 10px !important;
+  }
+
+  /* Message bubbles: Full width on tiny screens */
+  .msg-user,
+  .msg-ai {
+    padding: 0.75rem 1rem;
+  }
+
+  /* Input bar: Even more compact */
+  .glass-input {
+    border-radius: 16px !important;
+  }
+
+  /* Theme toggle: Slightly smaller */
+  .theme-toggle {
+    width: 44px;
+    height: 24px;
+  }
+
+  .theme-toggle-knob {
+    width: 16px;
+    height: 16px;
+    top: 3px;
+    left: 3px;
+  }
+
+  [data-theme="light"] .theme-toggle-knob {
+    left: 23px;
+  }
+
+  .theme-toggle-knob svg {
+    width: 10px !important;
+    height: 10px !important;
+  }
+}
+
+/* ---- Touch device: Always show message actions ---- */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-msg-actions {
+    display: flex !important;
+    opacity: 1 !important;
+  }
+
+  .desktop-msg-actions {
+    display: none !important;
+  }
+}
+
+/* ---- Safe area for notched phones (iPhone etc.) ---- */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .input-section-mobile {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+}

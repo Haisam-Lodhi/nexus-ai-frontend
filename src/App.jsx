@@ -463,14 +463,23 @@ function App() {
         {/* ============ SIDEBAR ============ */}
         <AnimatePresence>
           {sidebarOpen && (
-            <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 280, opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-              className="glass flex flex-col h-full z-20 overflow-hidden"
-              style={{ minWidth: 0 }}
-            >
+            <>
+              {/* Mobile backdrop overlay */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="mobile-sidebar-overlay md:hidden"
+                onClick={() => setSidebarOpen(false)}
+              />
+              <motion.div
+                initial={{ x: -280, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -280, opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                className="glass mobile-sidebar md:relative md:mobile-sidebar-none flex flex-col h-full z-20 overflow-hidden"
+                style={{ minWidth: 0, width: 280 }}
+              >
               {/* Sidebar Header */}
               <div className="p-5 pt-6">
                 <div className="flex items-center gap-3 mb-6 px-1">
@@ -549,6 +558,7 @@ function App() {
                 </div>
               </div>
             </motion.div>
+            </>
           )}
         </AnimatePresence>
 
@@ -597,7 +607,7 @@ function App() {
                   }
                 </div>
               </button>
-              <span className="text-[11px] font-medium px-2.5 py-1 rounded-full" style={{ background: 'var(--glow-blue)', color: 'var(--accent-blue)', border: `1px solid var(--border-default)` }}>
+              <span className="text-[11px] font-medium px-2.5 py-1 rounded-full hidden sm:inline-block" style={{ background: 'var(--glow-blue)', color: 'var(--accent-blue)', border: `1px solid var(--border-default)` }}>
                 Gemini 2.5 Flash
               </span>
             </div>
@@ -631,7 +641,7 @@ function App() {
                   </motion.div>
 
                   <motion.h1
-                    className="text-3xl md:text-5xl font-extrabold mb-3 tracking-tight"
+                    className="text-3xl md:text-5xl font-extrabold mb-3 tracking-tight welcome-title"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
@@ -660,12 +670,9 @@ function App() {
                     key={idx}
                     className={`flex gap-3 group relative ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
-                    <div className={`flex gap-4 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                      {/* Avatar */}
-                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-1 ${msg.role === 'user'
-                        ? ''
-                        : ''
-                        }`} style={msg.role === 'user'
+                    <div className={`flex gap-4 max-w-[95%] md:max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      {/* Avatar — hidden on small phones */}
+                      <div className={`w-8 h-8 rounded-xl items-center justify-center flex-shrink-0 mt-1 hidden sm:flex`} style={msg.role === 'user'
                           ? { background: 'linear-gradient(135deg, #669df6, #8ab4f8)', boxShadow: '0 4px 12px rgba(138,180,248,0.25)' }
                           : { background: 'rgba(138,180,248,0.08)', border: '1px solid rgba(138,180,248,0.15)' }
                         }>
@@ -723,8 +730,8 @@ function App() {
                               </ReactMarkdown>
                             </div>
 
-                            {/* Hover Actions */}
-                            <div className={`absolute top-0 ${msg.role === 'user' ? '-left-12' : '-right-12'} opacity-0 group-hover:opacity-100 transition-all duration-200 flex flex-col gap-1`}>
+                            {/* Desktop Hover Actions — hidden on touch */}
+                            <div className={`desktop-msg-actions absolute top-0 ${msg.role === 'user' ? '-left-12' : '-right-12'} opacity-0 group-hover:opacity-100 transition-all duration-200 flex flex-col gap-1`}>
                               {msg.role === 'user' && (
                                 <button
                                   onClick={() => { setEditingIndex(idx); setEditPrompt(msg.content); }}
@@ -736,7 +743,6 @@ function App() {
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
                               )}
-                              {/* 🔊 TTS Speaker Button — AI messages only */}
                               {msg.role === 'ai' && msg.content && (
                                 <button
                                   onClick={() => speakMessage(msg.content, idx)}
@@ -745,8 +751,6 @@ function App() {
                                     ? { background: 'rgba(138,180,248,0.15)', border: '1px solid rgba(138,180,248,0.3)', color: 'var(--accent-blue)' }
                                     : { background: 'var(--bg-surface)', border: '1px solid var(--border-default)', color: 'var(--text-muted)' }
                                   }
-                                  onMouseEnter={e => { if (speakingIndex !== idx) e.currentTarget.style.color = 'var(--accent-blue)'; }}
-                                  onMouseLeave={e => { if (speakingIndex !== idx) e.currentTarget.style.color = 'var(--text-muted)'; }}
                                   title={speakingIndex === idx ? 'Stop speaking' : 'Read aloud'}
                                 >
                                   {speakingIndex === idx ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
@@ -758,6 +762,35 @@ function App() {
                                 style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-default)', color: 'var(--text-muted)' }}
                                 onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-blue)'}
                                 onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                              >
+                                {copiedIndex === idx ? <Check className="w-3.5 h-3.5" style={{ color: '#22c55e' }} /> : <Copy className="w-3.5 h-3.5" />}
+                              </button>
+                            </div>
+
+                            {/* Mobile Inline Actions — visible on touch devices */}
+                            <div className="mobile-msg-actions" style={{ display: 'none' }}>
+                              {msg.role === 'user' && (
+                                <button
+                                  onClick={() => { setEditingIndex(idx); setEditPrompt(msg.content); }}
+                                  className="p-1.5 rounded-lg transition-all"
+                                  style={{ color: 'var(--text-muted)' }}
+                                >
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                              {msg.role === 'ai' && msg.content && (
+                                <button
+                                  onClick={() => speakMessage(msg.content, idx)}
+                                  className={`p-1.5 rounded-lg transition-all ${speakingIndex === idx ? 'tts-speaking' : ''}`}
+                                  style={{ color: speakingIndex === idx ? 'var(--accent-blue)' : 'var(--text-muted)' }}
+                                >
+                                  {speakingIndex === idx ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                                </button>
+                              )}
+                              <button
+                                onClick={() => copyToClipboard(msg.content, idx)}
+                                className="p-1.5 rounded-lg transition-all"
+                                style={{ color: 'var(--text-muted)' }}
                               >
                                 {copiedIndex === idx ? <Check className="w-3.5 h-3.5" style={{ color: '#22c55e' }} /> : <Copy className="w-3.5 h-3.5" />}
                               </button>
@@ -795,7 +828,7 @@ function App() {
 
           {/* ============ INPUT SECTION ============ */}
           <div
-            className={chatHistory.length === 0 ? 'w-full px-4 md:px-8 pb-5 pt-2 z-20' : 'absolute bottom-0 w-full px-4 md:px-8 pb-5 pt-16 z-20'}
+            className={chatHistory.length === 0 ? 'w-full px-4 md:px-8 pb-5 pt-2 z-20 input-section-mobile' : 'absolute bottom-0 w-full px-4 md:px-8 pb-5 pt-16 z-20 input-section-mobile'}
             style={chatHistory.length === 0 ? {} : { background: 'linear-gradient(to top, var(--bg-primary) 60%, transparent 100%)' }}
           >
             <div className="max-w-3xl mx-auto relative flex flex-col">
@@ -868,7 +901,7 @@ function App() {
               <div className="glass-input rounded-2xl overflow-hidden">
                 <div className="flex items-end px-4 py-3">
                   {/* Left Actions */}
-                  <div className="flex items-center gap-1 pb-1.5">
+                  <div className="flex items-center gap-1 pb-1.5 input-actions-left">
                     <label
                       className="p-2.5 rounded-xl cursor-pointer transition-all duration-200"
                       style={{ color: 'var(--text-muted)' }}
